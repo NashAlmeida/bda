@@ -1,0 +1,47 @@
+hive
+
+CREATE DATABASE analytics_db;
+
+SHOW DATABASES;
+
+USE analytics_db;
+
+CREATE TABLE student_marks
+(
+    student_id INT,
+    student_name STRING,
+    age INT,
+    marks INT
+);
+
+SHOW TABLES;
+
+INSERT INTO TABLE student_marks VALUES
+(1, 'Amit', 20, 75),
+(2, 'Rahul', 21, 88),
+(3, 'Priya', 20, 61),
+(4, 'Karan', 20, 92),
+(5, 'Neha', 20, 68);
+
+SELECT * FROM student_marks;
+
+SELECT COUNT(*) FROM student_marks;
+
+SELECT SUM(marks) FROM student_marks;
+
+SELECT AVG(marks) FROM student_marks;
+
+SELECT MIN(marks) FROM student_marks;
+
+SELECT MAX(marks) FROM student_marks;
+
+SELECT STDDEV(marks) FROM student_marks;
+
+SELECT VARIANCE(marks) FROM student_marks;
+
+SELECT age, AVG(marks)
+FROM student_marks
+GROUP BY age;
+
+SELECT * FROM student_marks
+ORDER BY marks DESC;

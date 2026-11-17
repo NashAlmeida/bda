@@ -1,0 +1,65 @@
+------------------ LINUX TERMINAL ------------------
+
+mysql -u root -pcloudera
+
+------------------ MYSQL SHELL (mysql>) ------------------
+
+show databases;
+
+use retail_db;
+
+show tables;
+
+select * from departments;
+
+------------------ LINUX TERMINAL ------------------
+
+sqoop list-databases --connect jdbc:mysql://quickstart:3306/ --username root --password cloudera
+
+sqoop list-tables --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera
+
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table departments
+
+hadoop fs -ls
+
+hadoop fs -ls departments
+
+hadoop fs -cat /user/cloudera/departments/part*
+
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table departments --target-dir /user/cloudera/department1
+
+hadoop fs -ls
+
+hadoop fs -ls department1
+
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --password cloudera --username root --table departments --where "department_id>4" --target-dir /user/cloudera/department2
+
+hadoop fs -rm -r /user/cloudera/department2
+
+hadoop fs -cat /user/cloudera/department2/part*
+
+mysql -u root -pcloudera
+
+------------------ MYSQL SHELL (mysql>) ------------------
+
+use retail_db;
+
+CREATE TABLE dept (
+    department_id INT NOT NULL AUTO_INCREMENT,
+    department_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY(department_id)
+);
+
+select * from dept;
+
+------------------ LINUX TERMINAL ------------------
+
+sqoop export --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table dept --export-dir /user/cloudera/department2
+
+mysql -u root -pcloudera
+
+------------------ MYSQL SHELL (mysql>) ------------------
+
+use retail_db;
+
+select * from dept;
