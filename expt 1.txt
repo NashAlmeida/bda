@@ -1,0 +1,204 @@
+EXPERIMENT 1 – EXECUTE HADOOP COMMANDS
+======================================
+
+AIM
+To execute Hadoop commands and perform basic operations on HDFS.
+
+ENVIRONMENT
+VM: Cloudera QuickStart
+Hadoop version: 2.6.0-cdh5.13.0
+
+STEP 1 – CHECK HADOOP VERSION
+Command:
+    hadoop version
+
+Purpose: Displays the installed Hadoop version.
+Observed version: Hadoop 2.6.0-cdh5.13.0
+
+STEP 2 – LIST THE ROOT DIRECTORY IN HDFS
+Command:
+    hdfs dfs -ls /
+
+Purpose: Displays the contents of the HDFS root directory.
+Example: /benchmarks, /hbase, /solr, /tmp, /user, /var
+(The exact listing may vary.)
+
+STEP 3 – CREATE A DIRECTORY IN HDFS
+Command:
+    hdfs dfs -mkdir /bob
+
+Verify:
+    hdfs dfs -ls /
+
+Expected result: /bob appears in the directory listing.
+
+STEP 4 – COPY A LOCAL FILE TO HDFS (copyFromLocal)
+1. Create a local file:
+    echo "Hello Bob, this is Hadoop practical." > bob.txt
+
+2. Display its contents:
+    cat bob.txt
+
+Expected output:
+    Hello Bob, this is Hadoop practical.
+
+3. Copy it to HDFS:
+    hdfs dfs -copyFromLocal bob.txt /bob
+
+4. Verify:
+    hdfs dfs -ls /bob
+
+Expected result: /bob/bob.txt appears.
+
+5. Read the HDFS file:
+    hdfs dfs -cat /bob/bob.txt
+
+Expected output:
+    Hello Bob, this is Hadoop practical.
+
+Purpose: Copies a local file to HDFS. The original local file remains.
+Note: An InterruptedException warning appeared during execution, but the
+upload succeeded and the file contents were readable.
+
+STEP 5 – COPY A FILE FROM HDFS TO LOCAL (copyToLocal)
+Command:
+    hdfs dfs -copyToLocal /bob/bob.txt bob_download.txt
+
+Verify:
+    ls
+    cat bob_download.txt
+
+Expected output:
+    Hello Bob, this is Hadoop practical.
+
+Purpose: Copies a file from HDFS to the local file system. The HDFS original
+remains.
+
+STEP 6 – MOVE A LOCAL FILE TO HDFS (moveFromLocal)
+1. Create a local file:
+    echo "This file will be moved to HDFS." > bob_move.txt
+
+2. Move it to HDFS:
+    hdfs dfs -moveFromLocal bob_move.txt /bob
+
+3. Verify:
+    hdfs dfs -ls /bob
+
+Expected result:
+    /bob/bob.txt
+    /bob/bob_move.txt
+
+4. Check the local file:
+    ls bob_move.txt
+
+Expected output:
+    ls: cannot access bob_move.txt: No such file or directory
+
+Purpose: Moves a local file to HDFS. The local original is removed after
+a successful move.
+
+IMPORTANT: The command executed in this practical was -moveFromLocal.
+Do not confuse it with -moveToLocal.
+
+STEP 7 – REMOVE A FILE FROM HDFS
+Command:
+    hdfs dfs -rm /bob/bob_move.txt
+
+Expected output:
+    Deleted /bob/bob_move.txt
+
+Verify:
+    hdfs dfs -ls /bob
+
+Expected result: Only /bob/bob.txt remains.
+
+Purpose: Removes a single file from HDFS.
+
+STEP 8 – REMOVE A DIRECTORY FROM HDFS
+Command:
+    hdfs dfs -rm -r /bob
+
+Expected output:
+    Deleted /bob
+
+Verify:
+    hdfs dfs -ls /
+
+Expected result: /bob no longer appears.
+
+Purpose: Recursively deletes a directory and all its contents from HDFS.
+WARNING: This deletes the specified HDFS directory and its contents.
+
+QUICK COMMAND REVISION
+1. Hadoop version:
+       hadoop version
+
+2. List HDFS root:
+       hdfs dfs -ls /
+
+3. Create HDFS directory:
+       hdfs dfs -mkdir /bob
+
+4. Copy local file to HDFS:
+       hdfs dfs -copyFromLocal bob.txt /bob
+
+5. Copy HDFS file to local:
+       hdfs dfs -copyToLocal /bob/bob.txt bob_download.txt
+
+6. Move local file to HDFS:
+       hdfs dfs -moveFromLocal bob_move.txt /bob
+
+7. Remove a file:
+       hdfs dfs -rm /bob/bob_move.txt
+
+8. Remove a directory recursively:
+       hdfs dfs -rm -r /bob
+
+OTHER USEFUL COMMANDS
+Read an HDFS file:
+    hdfs dfs -cat /bob/bob.txt
+
+List local files:
+    ls
+
+Read a local file:
+    cat bob.txt
+
+VIVA QUESTIONS AND ANSWERS
+1. What is Hadoop?
+   Hadoop is an open-source framework used for distributed storage and
+   processing of large datasets.
+
+2. What is HDFS?
+   HDFS stands for Hadoop Distributed File System. It stores data across
+   multiple machines.
+
+3. What does hadoop version do?
+   It displays the installed Hadoop version.
+
+4. What does hdfs dfs -ls / do?
+   It lists files and directories in the HDFS root directory.
+
+5. What does hdfs dfs -mkdir do?
+   It creates a directory in HDFS.
+
+6. What is copyFromLocal used for?
+   It copies a file from the local file system to HDFS.
+
+7. What is copyToLocal used for?
+   It copies a file from HDFS to the local file system.
+
+8. Difference between copyFromLocal and moveFromLocal?
+   copyFromLocal copies the file and keeps the local original.
+   moveFromLocal moves the file and removes the local original after success.
+
+9. What does hdfs dfs -rm do?
+   It removes a file from HDFS.
+
+10. What does hdfs dfs -rm -r do?
+    It recursively removes a directory and its contents from HDFS.
+
+CONCLUSION
+In this experiment, various Hadoop commands were executed successfully.
+We created an HDFS directory, copied and moved files between the local file
+system and HDFS, displayed file contents, and removed files and directories.
