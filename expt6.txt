@@ -1,0 +1,334 @@
+BIG DATA ANALYTICS PRACTICAL
+EXPERIMENT NO. 06
+
+AIM:
+To perform CRUD operations and query processing using MongoDB.
+
+THEORY:
+NoSQL (Not Only SQL) databases are non-relational databases designed to store and manage large volumes of structured, semi-structured, and unstructured data. They do not require a fixed schema and are useful for applications requiring flexibility, high performance, and horizontal scaling.
+
+MongoDB is a document-oriented NoSQL database. It stores data in BSON (Binary JSON) documents. Data is organized into databases, collections, and documents. Collections are similar to tables in relational databases, while documents are similar to rows.
+
+CRUD stands for:
+- Create: Insert documents into a collection.
+- Read: Retrieve documents from a collection.
+- Update: Modify existing documents.
+- Delete: Remove documents from a collection.
+
+------------------------------------------------------------
+1. USING DATABASE AND CREATING COLLECTIONS
+------------------------------------------------------------
+
+Open MongoDB Shell (mongosh).
+
+Select or create the database:
+use ERP
+
+Create the collections:
+db.createCollection("students")
+db.createCollection("faculty")
+
+------------------------------------------------------------
+2. INSERT DOCUMENTS
+------------------------------------------------------------
+
+Insert multiple student documents:
+
+db.students.insertMany([
+  {
+    name: "Aarav Mehta",
+    roll_no: 101,
+    year: 2,
+    dept: "Computer Engineering",
+    DOB: ISODate("2005-02-14")
+  },
+  {
+    name: "Isha Kulkarni",
+    roll_no: 102,
+    year: 3,
+    dept: "Information Technology",
+    DOB: ISODate("2004-07-09")
+  },
+  {
+    name: "Rohan Shah",
+    roll_no: 103,
+    year: 1,
+    dept: "Electronics",
+    DOB: ISODate("2006-01-22")
+  },
+  {
+    name: "Meera Joshi",
+    roll_no: 104,
+    year: 4,
+    dept: "Computer Engineering",
+    DOB: ISODate("2003-11-30")
+  },
+  {
+    name: "Kabir Desai",
+    year: 8,
+    dept: "Electronics",
+    DOB: ISODate("1988-12-05"),
+    salary: 85000
+  }
+])
+
+Insert faculty documents:
+
+db.faculty.insertMany([
+  {
+    name: "Nikhil Patil",
+    year: 10,
+    dept: "Computer Engineering",
+    DOB: ISODate("1985-03-15"),
+    salary: 90000
+  },
+  {
+    name: "Sana Khan",
+    year: 6,
+    dept: "Information Technology",
+    DOB: ISODate("1990-08-20"),
+    salary: 75000
+  }
+])
+
+------------------------------------------------------------
+3. FIND – DISPLAY DOCUMENTS
+------------------------------------------------------------
+
+Display all student documents:
+db.students.find()
+
+Find students from Computer Engineering:
+db.students.find({ dept: "Computer Engineering" })
+
+Expected:
+Aarav Mehta and Meera Joshi match this condition.
+
+------------------------------------------------------------
+4. FINDONE – DISPLAY ONE MATCHING DOCUMENT
+------------------------------------------------------------
+
+Find the student with roll number 102:
+db.students.findOne({ roll_no: 102 })
+
+Expected:
+The document for Isha Kulkarni is returned.
+
+Find a student by name:
+db.students.findOne({ name: "Zoya Malhotra" })
+
+Expected:
+null, if no matching document exists.
+
+------------------------------------------------------------
+5. UPDATE – MODIFY DOCUMENTS
+------------------------------------------------------------
+
+Update the year of the student with roll number 101:
+db.students.updateOne(
+  { roll_no: 101 },
+  { $set: { year: 3 } }
+)
+
+Update the department for all students currently in Computer Engineering:
+db.students.updateMany(
+  { dept: "Computer Engineering" },
+  { $set: { dept: "CSE" } }
+)
+
+------------------------------------------------------------
+6. REPLACE – REPLACE AN ENTIRE DOCUMENT
+------------------------------------------------------------
+
+Replace the document with roll number 103:
+
+db.students.replaceOne(
+  { roll_no: 103 },
+  {
+    name: "Rohan Shah",
+    roll_no: 103,
+    year: 2,
+    dept: "Electronics and Telecommunication",
+    DOB: ISODate("2006-01-22")
+  }
+)
+
+------------------------------------------------------------
+7. DELETE – REMOVE DOCUMENTS
+------------------------------------------------------------
+
+Delete the student with roll number 104:
+db.students.deleteOne({ roll_no: 104 })
+
+Delete faculty documents belonging to Electronics:
+db.faculty.deleteMany({ dept: "Electronics" })
+
+Note:
+The inserted faculty sample records do not include an Electronics department, so this command may return deletedCount: 0 unless an Electronics faculty document is added first.
+
+------------------------------------------------------------
+8. CHECK THE UPDATED COLLECTION
+------------------------------------------------------------
+
+Display all remaining student documents:
+db.students.find()
+
+Display all remaining faculty documents:
+db.faculty.find()
+
+------------------------------------------------------------
+9. UPSERT – UPDATE OR INSERT
+------------------------------------------------------------
+
+db.students.updateOne(
+  { roll_no: 107 },
+  { $set: { year: 3 } },
+  { upsert: true }
+)
+
+Expected:
+If no document with roll_no 107 exists, MongoDB inserts a new document with roll_no 107 and year 3.
+
+------------------------------------------------------------
+10. IMPORTANT MONGODB COMMANDS FOR QUICK REVISION
+------------------------------------------------------------
+
+Select database:
+use ERP
+
+Create collection:
+db.createCollection("students")
+
+Insert one document:
+db.students.insertOne({ name: "Aarav Mehta", roll_no: 101 })
+
+Insert multiple documents:
+db.students.insertMany([{ name: "Aarav Mehta" }, { name: "Isha Kulkarni" }])
+
+Display all documents:
+db.students.find()
+
+Find documents using a condition:
+db.students.find({ dept: "Computer Engineering" })
+
+Find one document:
+db.students.findOne({ roll_no: 102 })
+
+Update one document:
+db.students.updateOne(
+  { roll_no: 101 },
+  { $set: { year: 3 } }
+)
+
+Update multiple documents:
+db.students.updateMany(
+  { dept: "Computer Engineering" },
+  { $set: { dept: "CSE" } }
+)
+
+Increment a numeric field:
+db.students.updateMany(
+  { year: 2 },
+  { $inc: { year: 1 } }
+)
+
+Replace a document:
+db.students.replaceOne(
+  { roll_no: 103 },
+  { name: "Rohan Shah", roll_no: 103 }
+)
+
+Delete one document:
+db.students.deleteOne({ roll_no: 104 })
+
+Delete multiple documents:
+db.students.deleteMany({ dept: "Electronics" })
+
+Sort ascending:
+db.students.find().sort({ roll_no: 1 })
+
+Sort descending:
+db.students.find().sort({ roll_no: -1 })
+
+Limit number of results:
+db.students.find().limit(3)
+
+Display selected fields only:
+db.students.find({}, { name: 1, dept: 1, _id: 0 })
+
+Count documents:
+db.students.countDocuments()
+
+------------------------------------------------------------
+11. VIVA QUESTIONS AND ANSWERS
+------------------------------------------------------------
+
+Q1. What is NoSQL?
+Ans: NoSQL means Not Only SQL. It refers to non-relational databases designed for flexible data storage and scaling.
+
+Q2. What is MongoDB?
+Ans: MongoDB is a document-oriented NoSQL database that stores data in BSON documents.
+
+Q3. What is BSON?
+Ans: BSON stands for Binary JSON. It is the binary-encoded format used by MongoDB to store documents.
+
+Q4. What is a collection?
+Ans: A collection is a group of MongoDB documents. It is similar to a table in a relational database.
+
+Q5. What is a document?
+Ans: A document is an individual record stored in a collection as field-value pairs.
+
+Q6. What does CRUD stand for?
+Ans: Create, Read, Update, and Delete.
+
+Q7. What is the use of use ERP?
+Ans: It selects the ERP database or creates it when data is first inserted.
+
+Q8. What is the difference between insertOne() and insertMany()?
+Ans: insertOne() inserts one document, while insertMany() inserts multiple documents.
+
+Q9. What is the difference between find() and findOne()?
+Ans: find() returns all matching documents; findOne() returns the first matching document.
+
+Q10. What is the use of $set?
+Ans: It sets or updates the specified field values in a document.
+
+Q11. What is the difference between updateOne() and updateMany()?
+Ans: updateOne() updates the first matching document, while updateMany() updates all matching documents.
+
+Q12. What is replaceOne()?
+Ans: It replaces an entire matching document with a new document.
+
+Q13. What is the difference between deleteOne() and deleteMany()?
+Ans: deleteOne() removes the first matching document; deleteMany() removes all matching documents.
+
+Q14. What is upsert?
+Ans: Upsert is an update operation that inserts a new document if no document matches the filter.
+
+Q15. What is the use of sort()?
+Ans: It sorts documents in ascending order (1) or descending order (-1).
+
+Q16. What is the use of limit()?
+Ans: It restricts the number of documents returned by a query.
+
+Q17. What is projection in MongoDB?
+Ans: Projection selects which fields should be included or excluded in query results.
+
+Q18. What is horizontal scaling?
+Ans: Horizontal scaling means increasing capacity by adding more machines or nodes.
+
+Q19. Is MongoDB schema-less?
+Ans: MongoDB has a flexible schema. Documents in the same collection do not have to contain exactly the same fields.
+
+Q20. What does countDocuments() do?
+Ans: It returns the number of documents matching the specified filter, or the total number when no filter is supplied.
+
+------------------------------------------------------------
+12. CONCLUSION
+------------------------------------------------------------
+
+This experiment was performed to learn about NoSQL databases and MongoDB. Various CRUD operations were demonstrated in MongoDB Shell to manipulate documents in collections. Query processing and the flexibility and horizontal scaling capabilities of MongoDB were also studied.
+
+LOs achieved: LO3
+POs achieved: PO1, PO2, PO3, PO4, PO5, PO8, PO9, PO10
+PSOs achieved: PSO1, PSO2
